@@ -1,13 +1,15 @@
 # Character swap in ComfyUI: Viggle Remake and akatz Character Swap V1.5
 
-Everything you need to follow the video tutorial: the **Viggle Remake Long** node pack, one ComfyUI workflow per
-lesson, the source clips, and links to every model file. Everything was tested on an **RTX 3080 10 GB** with 64 GB
+Everything you need to follow the video tutorial: the **Viggle Remake Long** node pack, Viggle's own nodes, one
+ComfyUI workflow per lesson (Viggle and akatz), the source clips, and download links to every model file. Everything was tested on an **RTX 3080 10 GB** with 64 GB
 of system RAM.
 
 | Folder | What's in it |
 | --- | --- |
-| [`ComfyUI-Viggle-Remake-Long/`](ComfyUI-Viggle-Remake-Long/) | The node pack: Viggle Long Swap, Viggle Character, Viggle Pick Frame, Viggle Align Keyframe, plus `install.bat` |
-| [`workflows/`](workflows/) | One workflow per lesson; drag a file onto the ComfyUI canvas |
+| [`ComfyUI-Viggle-Remake-Long/`](ComfyUI-Viggle-Remake-Long/) | Our node pack: Viggle Long Swap, Viggle Character, Viggle Pick Frame, Viggle Align Keyframe, plus `install.bat` |
+| [`ComfyUI-Viggle-Remake/`](ComfyUI-Viggle-Remake/) | Viggle's own Viggle Remake nodes (needed), unchanged from Viggle, Apache-2.0 |
+| [`workflows/`](workflows/) | One Viggle workflow per lesson; drag a file onto the ComfyUI canvas |
+| [`workflows/akatz/`](workflows/akatz/) | The akatz workflows from the video, ready to run (H3 Relay's workflow with our settings, GPL-3.0) |
 | [`inputs/`](inputs/) | The AI-generated source clips used in the video (24 fps); copy them into `ComfyUI/input` |
 
 The character pictures and edited keyframes from the video are **not** included: load your own character
@@ -22,16 +24,14 @@ pictures in the Load Image nodes, and make your own edited keyframes (see "Paint
 
 ## Install the nodes
 
-1. Double-click `ComfyUI-Viggle-Remake-Long/install.bat`. It finds your ComfyUI, or asks you to drag the ComfyUI
-   folder into its window. It then copies the nodes into `custom_nodes` and checks that Viggle's own nodes are
-   installed. It does not restart anything.
-2. Install Viggle's own **ComfyUI-Viggle-Remake** nodes: the `comfyui/ComfyUI-Viggle-Remake` folder from
-   [Viggle/Viggle-Remake](https://huggingface.co/Viggle/Viggle-Remake/tree/main/comfyui) goes into
-   `ComfyUI/custom_nodes`.
+1. Download this repository (Code → Download ZIP) and unzip it.
+2. Double-click `01-character-swap-viggle-akatz/ComfyUI-Viggle-Remake-Long/install.bat`. It finds your ComfyUI, or
+   asks you to drag the ComfyUI folder into its window. It then copies our nodes and Viggle's own nodes into
+   `custom_nodes`. It does not restart anything.
 3. Restart ComfyUI, double-click the canvas and type `Viggle`.
 
-To install by hand instead (any system), copy the `ComfyUI-Viggle-Remake-Long` folder into `ComfyUI/custom_nodes`. No
-extra Python packages are needed.
+To install by hand instead (any system), copy both `ComfyUI-Viggle-Remake-Long` and `ComfyUI-Viggle-Remake` into
+`ComfyUI/custom_nodes`. No extra Python packages are needed.
 
 For akatz, install **H3 Relay**: [github.com/akatz-ai/h3-relay](https://github.com/akatz-ai/h3-relay) (GPL-3.0).
 
@@ -115,8 +115,19 @@ Never give a later window a frame that redraws people who are already in the sho
 
 ## akatz Character Swap V1.5
 
-Use the workflow that ships with H3 Relay: `example_workflows/toolkit/H3-Character-Swap.json`. Settings used in the
-video:
+The workflows in [`workflows/akatz/`](workflows/akatz/) are H3 Relay's `H3-Character-Swap.json` with the settings
+from the video already set, and Create Video's `chroma_subsampling` already fixed. They are GPL-3.0, like H3 Relay.
+
+| Workflow | Lesson | Clip |
+| --- | --- | --- |
+| `a1_one_person` | One person from a picture | promenade |
+| `a2_talking_closeup` | Talking close-up | `tut_closeup_24fps.mp4` |
+| `a3_crossing_limit` | The limit: the mask jumps to the man walking in | crossing |
+| `a3c_crossing_trimmed_fix` | The fix: duration trimmed to 3.6 s | crossing |
+| `a4_two_people_pass1_left` | Two people, pass 1: the man on the left | cafe |
+| `a4b_two_people_pass2_right` | Pass 2: the man on the right; the source is pass 1's output (copy it into `ComfyUI/input` and pick it) | pass 1's output |
+
+Settings used in the video:
 
 - **Prepare Source:** resolution `480` on 10 GB (outputs 960×512); `duration_seconds` = your clip length.
 - **SAM description:** the person to replace, by what you can see. **Select Mask:** `largest` / `leftmost` / `rightmost`.
