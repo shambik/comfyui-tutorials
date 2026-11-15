@@ -15,11 +15,21 @@ const toFrame = (s) => (s < 0 ? -1 : Math.round(s * FPS));
 // a Viggle window is 17n+5 frames, 90..345: snap typed seconds to the nearest allowed length
 const toWindow = (s) => Math.min(345, Math.max(90, Math.round((s * FPS - 5) / 17) * 17 + 5));
 
+const wfOf = (node, name) => node.widgets.find((w) => w.name === name).value;
+
 function link(node) {
     const pairs = PAIRS[node.comfyClass];
     if (!pairs || !node.widgets) return;
     for (const [fName, sName, kind] of pairs) {
-        const fromSeconds = kind === "window" ? toWindow : toFrame;
+        // window: a small nudge (the +/- buttons move 0.01 s) jumps to the next/previous allowed length
+        const fromSeconds = kind === "window"
+            ? (sec) => {
+                const cur = wfOf(node, fName), snapped = toWindow(sec), shown = toSeconds(cur);
+                if (snapped === cur && Math.abs(sec - shown) > 0.001)
+                    return Math.min(345, Math.max(90, cur + (sec > shown ? 17 : -17)));
+                return snapped;
+            }
+            : toFrame;
         const wf = node.widgets.find((w) => w.name === fName);
         const ws = node.widgets.find((w) => w.name === sName);
         if (!wf || !ws || wf.__viggleLinked) continue;

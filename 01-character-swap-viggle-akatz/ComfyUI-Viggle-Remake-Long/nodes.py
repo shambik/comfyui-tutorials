@@ -383,7 +383,7 @@ class ViggleLongSwap:
                               "Frames per Viggle pass, at 24 fps: 124 = 5.2 s (default, what fits a 10 GB card, tested "
                               "on an RTX 3080) ... 345 = 14.4 s (Viggle's maximum). A card with more VRAM can use "
                               "longer windows and gets fewer joins (not tested here)."}),
-            "window_seconds": ("FLOAT", {"default": 5.17, "min": 3.75, "max": 14.38, "step": 0.71, "round": 0.01, "tooltip":
+            "window_seconds": ("FLOAT", {"default": 5.17, "min": 3.75, "max": 14.38, "step": 0.01, "round": 0.01, "tooltip":
                                "The window length in seconds, linked to window_frames: type seconds and the nearest "
                                "length Viggle allows (17n+5 frames) is set. 5.17 s fits a 10 GB card; up to 14.38 s."}),
             "keyframe_1": ("IMAGE", {"tooltip": "Optional: a frame of the source, edited in an image editor so the new "
