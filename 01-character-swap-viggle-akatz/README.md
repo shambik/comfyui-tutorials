@@ -44,6 +44,7 @@ Download each file into the ComfyUI folder shown. The models have their own lice
 | File | Size | Put it in | Download |
 | --- | --- | --- | --- |
 | `viggle_remake_swap_pruned_int8_convrot.safetensors` | 21 GB | `models/diffusion_models` | [Viggle/Viggle-Remake → int8/](https://huggingface.co/Viggle/Viggle-Remake/blob/main/int8/viggle_remake_swap_pruned_int8_convrot.safetensors) |
+| `viggle_remake_edit_pruned_int8_convrot.safetensors` (background change only) | 21 GB | `models/diffusion_models` | [Viggle/Viggle-Remake → int8/](https://huggingface.co/Viggle/Viggle-Remake/blob/main/int8/viggle_remake_edit_pruned_int8_convrot.safetensors) |
 | `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` | 15.7 GB | `models/text_encoders` | [Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3/blob/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors) |
 | `minimax_h3_video_vae_fp16.safetensors` | 5.2 GB | `models/vae` | [Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3/blob/main/vae/minimax_h3_video_vae_fp16.safetensors) |
 | `minimax_h3_audio_vae_fp32.safetensors` | 0.6 GB | `models/vae` | [Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3/blob/main/vae/minimax_h3_audio_vae_fp32.safetensors) |
@@ -72,6 +73,7 @@ Image nodes. Times are measured on the RTX 3080 and include model loading.
 | `05_people_who_come_and_go` | Frame ranges per person, two keyframes | `tut_crossing_24fps.mp4` | 17.4 min |
 | `06_long_clip_25s` | The same workflow on a 25 s clip (6 windows) | `tut_promenade25_24fps.mp4` | 47.6 min |
 | `07_selfie_render1_pictures_only` | Busy selfie, render 1: three characters with plain pictures | `tut_selfie15_24fps.mp4` (15.4 s) | 33 min |
+| `09_background_change` | New background with Viggle Long Edit (edit model); the background moves with the camera | promenade | 16.7 min |
 | `08_selfie_render2_only_the_pilot` | Busy selfie, render 2: only the person render 1 missed | render 1's output (copy it into `ComfyUI/input` and pick it in Load Video) | 31 min |
 
 Viggle outputs 1280×736 (0.94 MP). The source clips are 1664×928 (1.5 MP, MiniMax H3) or 1888×1056 (2 MP, LTX).
@@ -87,6 +89,14 @@ up to 14.38 s to get fewer joins (not tested here). Every frame number has
 a linked **seconds** field: type the time you see in the player and the frame number follows.
 
 Plan for about 7 minutes per 5 seconds of video. On 64 GB of RAM, keep one run to about 25 s.
+
+### Background change (workflow 09)
+
+**Viggle Long Edit (background)** keeps the people and replaces the place around them, with Viggle Remake's edit
+model. Fill in `keep` (who stays), `setting_from`, `setting_to` (the new place, in detail) and `camera` (how the camera
+moves, so the background moves the same way). Connect one frame with the background edited to `keyframe_1`, and leave
+`pin_keyframe` **off**: the edited frame is then a look reference and the background moves with the camera. With it
+on, the background freezes on that picture.
 
 ### Painted keyframes (edited frames)
 

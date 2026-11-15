@@ -211,8 +211,10 @@ def describe(windows, keeps, per, chars) -> str:
                 pics.append(f"window {k - 1}'s last carried-over frame" + (f", pinned at {pin}" if pin is not None else ""))
             elif pin is not None:
                 pics.append(f"{ref} (frame {start + pin}) pinned at {pin}" if start else f"{ref} pinned at {pin}")
-            else:
+            elif isinstance(ref, int):
                 pics.append(f"{chars[ref]['name']}'s picture")
+            else:
+                pics.append(f"{ref} as a look reference (not pinned)")
         lines.append(f"Window {k}: source frames {start}-{start + frames - 1} ({ts(start)}-{ts(start + frames)}), "
                      f"keeps {start + a}-{start + b - 1}; " + ", ".join(pics))
     return "\n".join(lines)
@@ -418,6 +420,11 @@ class ViggleLongSwap:
                    "what fits a 10 GB card; Viggle itself takes up to 14.4 s), chains each window to the previous one so "
                    "nothing jumps at the joins, and returns the joined video with the source sound.")
 
+    SIGMAS = SIGMAS   # Viggle's swap schedule
+
+    def window_prompt(self, characters, who, refs, total, notes):
+        return prompt(characters, who, refs, total, notes)
+
     def run(self, video, characters, seed, model, text_encoder, video_vae, audio_vae, keyframe_1=None,
             keyframe_1_frame=60, keyframe_2=None, keyframe_2_frame=110, notes="", window_frames=124, keyframe_3=None,
             keyframe_3_frame=20, keyframe_4=None, keyframe_4_frame=100, dynprompt=None, unique_id=None, **_):
@@ -438,6 +445,8 @@ class ViggleLongSwap:
         if len({f for _, f in keyframes}) < len(keyframes):
             raise ValueError("Viggle Long Swap: two keyframes have the same frame number; give each its own frame.")
         windows, keeps, per, who = plan(total, characters, keyframes, window_frames)
+        if getattr(self, "unpin_first", False):   # window 1's keyframes as look references (Viggle Long Edit)
+            per[0] = [(name, None) for name, _ in per[0]]
         text = describe(windows, keeps, per, characters)
         logging.info("Viggle Long Swap plan (%d frames):\n%s", total, text)
 
@@ -452,7 +461,7 @@ class ViggleLongSwap:
         video_link = _link(dynprompt, unique_id, "video")
         sound = g.node("ViggleVideoAudio", video=video_link)
         sampler = g.node("KSamplerSelect", sampler_name="euler")
-        sigmas = g.node("ManualSigmas", sigmas=SIGMAS)
+        sigmas = g.node("ManualSigmas", sigmas=self.SIGMAS)
         pictures = {}
         for refs in per:
             for ref, pin in refs:
@@ -462,14 +471,16 @@ class ViggleLongSwap:
                     fit = g.node("ImageScale", image=_link(dynprompt, unique_id, ref), upscale_method="lanczos",
                                  width=cw, height=ch, crop="center")
                     pictures[ref] = fit.out(0)
-                else:
+                elif isinstance(ref, int):
                     pictures[ref] = characters[ref]["picture"]
+                else:                 # an unpinned keyframe (Viggle Long Edit): a look reference, not cropped or pinned
+                    pictures[ref] = _link(dynprompt, unique_id, ref)
         keep_links, prev_decode = [], None
         for k, ((start, frames), (a, b), refs) in enumerate(zip(windows, keeps, per)):
             src = g.node("ViggleVideoFrames", video=video_link, start=start, length=frames)
             audio = g.node("TrimAudioDuration", audio=sound.out(0), start_index=start / FPS, duration=frames / FPS)
             cond = {"clip": clip.out(0), "vae": vae.out(0), "audio_vae": avae.out(0), "source": src.out(0),
-                    "audio": audio.out(0), "prompt": prompt(characters, who[k], refs, total, notes),
+                    "audio": audio.out(0), "prompt": self.window_prompt(characters, who[k], refs, total, notes),
                     "frames": frames, "short_edge": SHORT_EDGE,
                     "pins": ", ".join(str(p) for _, p in refs if p is not None)}
             for i, (ref, _) in enumerate(refs, 1):
@@ -495,6 +506,115 @@ class ViggleLongSwap:
         join = g.node("BatchImagesNode", **{f"images.image{i}": l for i, l in enumerate(keep_links)})
         out = g.node("CreateVideo", images=join.out(0), audio=sound.out(0), fps=float(FPS))
         return {"result": (out.out(0), join.out(0), text), "expand": g.finalize()}
+
+
+EDIT_SIGMAS = "1.0, 0.983607, 0.96, 0.923077, 0.857143, 0.705882, 0.0"   # Viggle's edit schedule (remake_edit_api.json)
+EDIT_MODEL = "viggle_remake_edit_pruned_int8_convrot.safetensors"
+
+
+def edit_prompt(keep: str, setting_from: str, setting_to: str, refs: list, total: int, notes: str, camera: str = "") -> str:
+    """Viggle edit-mode prompt for a background / setting change, after Viggle's own lava-field example: the people
+    are kept, the setting is replaced; every picture is a frame of the target video (the edited keyframe in window 1,
+    the previous window's last frame later)."""
+    label = f"a {total / FPS:.1f} s single continuous shot with no cut"
+    notes = (" " + notes.strip()) if notes and notes.strip() else ""
+    nl = "\n"
+    pics, keys = [], []
+    for i, (_, pin) in enumerate(refs, 1):
+        if pin is None:
+            pics.append(f"<Picture {i}> is a reference picture showing <Subject 3> around <Subject 1>; it shows the look of "
+                        f"the new setting, not a frame of the target video.")
+            keys.append(f"<Picture {i}> (reference): the look of <Subject 3> - its buildings, materials, colours and light - "
+                        f"is taken from <Picture {i}>; its framing and composition are not copied, because the camera "
+                        f"follows <Video 1>.")
+        else:
+            pics.append(f"<Picture {i}> is a frame of the target video, exactly as the target video shows it at that moment.")
+            keys.append(f"<Picture {i}> (target keyframe): fully_preserved - the target video passes through this exact frame.")
+    cam = camera.strip().rstrip(".")
+    cam_line = (f" The camera moves exactly as in <Video 1>: {cam}, so <Subject 3> moves past behind <Subject 1> the same way "
+                f"the original setting does.") if cam else (" The camera moves exactly as in <Video 1>, so <Subject 3> moves "
+                "past behind <Subject 1> the same way the original setting does.")
+    match = ", ".join(f"<Picture {i}> at {ts(pin)}" for i, (_, pin) in enumerate(refs, 1) if pin is not None)
+    matching = (", matching " + match) if match else ""
+    return f"""subject_definitions:
+<Video 1> is the source video for the target video edit: {label}.
+{nl.join(pics)}
+<Subject 1> is {keep.strip().rstrip(".")}.
+<Subject 2> is the setting from <Video 1>: {setting_from.strip().rstrip(".")}.
+<Subject 3> is {setting_to.strip().rstrip(".")}.
+
+summary:
+[video editing] The target video is an edited version of <Video 1>. <Subject 1> moves, acts and speaks exactly as in <Video 1>, with the same framing, camera motion and timing, but no longer in the setting of <Video 1>: everything around <Subject 1> is <Subject 3>.{notes}
+
+retention_analysis:
+<Video 1> (source video editing): fully_preserved - the camera motion, the framing, every movement of <Subject 1> and its timing are copied frame for frame.
+{nl.join(keys)}
+<Subject 1> (appears in [Shot 1]): fully_preserved - faces, hair, clothes and every movement are retained.
+<Subject 2> (appears in [Shot 1]): replaced - the whole setting of <Video 1> is replaced by <Subject 3> in every frame; nothing of it remains anywhere.
+<Subject 3> (appears in [Shot 1]): new - <Subject 3> fills everything around <Subject 1>, with light that matches it.
+
+detailed_description:
+The target video is a realistic live-action video with the same camera and timing as <Video 1>, set in <Subject 3>.{notes}
+[Shot 1] From 00:00.000 to the end, one continuous shot. From the very first frame <Subject 3> fills the whole picture around <Subject 1> and stays consistent in every frame; <Subject 1> moves exactly as in <Video 1>{matching}.{cam_line}
+
+overall_soundscape:
+The soundtrack of <Video 1>, unchanged.
+
+non_diegetic_music:
+N/A
+"""
+
+
+class ViggleLongEdit(ViggleLongSwap):
+    """Change the background / setting of a clip of any length with Viggle Remake's edit model: the people stay, the
+    place around them changes. Same windows and chaining as Viggle Long Swap; the first window is pinned to one edited
+    frame of the source that shows the new setting."""
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        base = ViggleLongSwap.INPUT_TYPES()
+        req = {k: v for k, v in base["required"].items() if k != "characters"}
+        unets = _names("diffusion_models")
+        req["model"] = (unets, {"default": _default(unets, EDIT_MODEL)})
+        opt = dict(base["optional"])
+        ordered = {k: opt.pop(k) for k in ("window_frames", "window_seconds")}
+        ordered["keep"] = ("STRING", {"multiline": True, "default": "", "tooltip":
+                           "Who stays exactly as they are, e.g. 'the man with curly grey hair and a light-blue denim jacket'."})
+        ordered["setting_from"] = ("STRING", {"multiline": True, "default": "", "tooltip":
+                                   "The place in the source now, e.g. 'a sunny seaside promenade with a beach and the sea'."})
+        ordered["setting_to"] = ("STRING", {"multiline": True, "default": "", "tooltip":
+                                 "The new place, in detail, e.g. 'a snowy mountain village street on a sunny winter day'."})
+        ordered["camera"] = ("STRING", {"multiline": True, "default": "", "tooltip":
+                             "How the camera moves in the source, e.g. 'the camera tracks backward in front of him as he "
+                             "walks'. The new background moves the same way."})
+        ordered["pin_keyframe"] = ("BOOLEAN", {"default": False, "tooltip":
+                                   "Off (recommended): the edited frame is only a look reference, so the new background "
+                                   "moves with the camera. On: the video passes exactly through the edited frame, which can "
+                                   "freeze the background."})
+        notes = opt.pop("notes")
+        ordered.update(opt)
+        ordered["notes"] = notes
+        return {"required": req, "optional": ordered, "hidden": base["hidden"]}
+
+    DESCRIPTION = ("Changes the background of a clip of any length with Viggle Remake's edit model: the people stay, the "
+                   "place around them changes. Connect one edited frame (the source frame with the new background) to "
+                   "keyframe_1; the windows are chained like Viggle Long Swap.")
+    SIGMAS = EDIT_SIGMAS
+
+    def window_prompt(self, characters, who, refs, total, notes):
+        keep, setting_from, setting_to, camera = self._edit
+        return edit_prompt(keep, setting_from, setting_to, refs, total, notes, camera)
+
+    def run(self, video, seed, model, text_encoder, video_vae, audio_vae, keep="", setting_from="", setting_to="",
+            camera="", pin_keyframe=False, keyframe_1=None, **kw):
+        if keyframe_1 is None:
+            raise ValueError("Viggle Long Edit: connect an edited frame (the source frame with the new background) to keyframe_1.")
+        if not keep.strip() or not setting_to.strip():
+            raise ValueError("Viggle Long Edit: fill in 'keep' (who stays) and 'setting_to' (the new place).")
+        self._edit = (keep, setting_from or "the original location", setting_to, camera)
+        self.unpin_first = not pin_keyframe
+        scene = [{"name": "the scene", "look": "", "replaces": "", "first": 0, "last": -1, "picture": None}]
+        return super().run(video, scene, seed, model, text_encoder, video_vae, audio_vae, keyframe_1=keyframe_1, **kw)
 
 
 class ViggleKeyframeAlign:
@@ -563,8 +683,8 @@ class VigglePickFrame:
 
 
 NODE_CLASS_MAPPINGS = {"ViggleVideoFrames": ViggleVideoFrames, "ViggleVideoAudio": ViggleVideoAudio,
-                       "ViggleCharacter": ViggleCharacter, "ViggleLongSwap": ViggleLongSwap,
+                       "ViggleCharacter": ViggleCharacter, "ViggleLongSwap": ViggleLongSwap, "ViggleLongEdit": ViggleLongEdit,
                        "ViggleKeyframeAlign": ViggleKeyframeAlign, "VigglePickFrame": VigglePickFrame}
 NODE_DISPLAY_NAME_MAPPINGS = {"ViggleVideoFrames": "Viggle Video Frames (part)",
-                              "ViggleVideoAudio": "Viggle Video Audio (part)", "ViggleCharacter": "Viggle Character", "ViggleLongSwap": "Viggle Long Swap",
+                              "ViggleVideoAudio": "Viggle Video Audio (part)", "ViggleCharacter": "Viggle Character", "ViggleLongSwap": "Viggle Long Swap", "ViggleLongEdit": "Viggle Long Edit (background)",
                               "ViggleKeyframeAlign": "Viggle Align Keyframe", "VigglePickFrame": "Viggle Pick Frame"}

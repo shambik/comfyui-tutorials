@@ -82,6 +82,21 @@ an edited keyframe sits, the new face copies its expression, which holds a talki
 Up to four keyframes: `keyframe_1` to `keyframe_4` (Viggle takes up to four pictures per window), each with its
 own time; at least one in the first window. The order doesn't matter; the node sorts them by time. The order of the inputs doesn't matter; the node sorts them by frame.
 
+## Background change: Viggle Long Edit
+
+**Viggle Long Edit (background)** uses Viggle Remake's *edit* model
+(`viggle_remake_edit_pruned_int8_convrot.safetensors`, Viggle/Viggle-Remake → int8/) to change everything around the
+people: the place, the weather or the light. Same windows and chaining as Viggle Long Swap.
+
+- **keep:** who stays exactly as they are. **setting_from / setting_to:** the place now, and the new place in detail.
+- **camera:** how the camera moves in the source (e.g. "the camera tracks backward in front of him"), so the new
+  background moves the same way.
+- **keyframe_1:** one frame (Viggle Pick Frame) with the background edited, as a look reference.
+- **pin_keyframe off** (the default): the edited frame is only a look reference and the background moves with the
+  camera. On, it pins that one picture and the background freezes.
+
+Tested: a 9.6 s walk-and-talk on a beach promenade, moved to a snowy alpine village, in 16.7 min on the RTX 3080.
+
 ## Two ways to swap
 
 **Picture mode** (simplest): connect a plain picture of the new person to each Viggle Character. Nothing else.

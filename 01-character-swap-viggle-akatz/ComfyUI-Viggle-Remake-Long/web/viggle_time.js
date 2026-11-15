@@ -9,6 +9,7 @@ const PAIRS = {
     ViggleKeyframeAlign: [["frame", "seconds"]],
     ViggleCharacter: [["first_frame", "first_seconds"], ["last_frame", "last_seconds"]],
     ViggleLongSwap: [["window_frames", "window_seconds", "window"], ...[1, 2, 3, 4].map((k) => [`keyframe_${k}_frame`, `keyframe_${k}_seconds`])],
+    ViggleLongEdit: [["window_frames", "window_seconds", "window"], ...[1, 2, 3, 4].map((k) => [`keyframe_${k}_frame`, `keyframe_${k}_seconds`])],
 };
 const toSeconds = (f) => (f < 0 ? -1 : Math.round((f / FPS) * 100) / 100);
 const toFrame = (s) => (s < 0 ? -1 : Math.round(s * FPS));
