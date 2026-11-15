@@ -1,5 +1,5 @@
 {
- "id": "6b1cbe98-7fc8-4d79-bb18-7a559cc30d1a",
+ "id": "f9861e3c-ec5e-4ba6-8301-55c86a3b0310",
  "revision": 0,
  "last_node_id": 0,
  "last_link_id": 9,
@@ -1017,7 +1017,7 @@
    ],
    "size": [
     400,
-    548
+    572
    ],
    "flags": {},
    "order": 7,
@@ -1204,6 +1204,40 @@
      "color_on": null,
      "dir": null,
      "label": null,
+     "localized_name": "window_frames",
+     "locked": null,
+     "name": "window_frames",
+     "nameLocked": null,
+     "removable": null,
+     "shape": 7,
+     "type": "INT",
+     "widget": {
+      "name": "window_frames"
+     },
+     "link": null
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "window_seconds",
+     "locked": null,
+     "name": "window_seconds",
+     "nameLocked": null,
+     "removable": null,
+     "shape": 7,
+     "type": "FLOAT",
+     "widget": {
+      "name": "window_seconds"
+     },
+     "link": null
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
      "localized_name": "keyframe_1_frame",
      "locked": null,
      "name": "keyframe_1_frame",
@@ -1264,40 +1298,6 @@
      "type": "FLOAT",
      "widget": {
       "name": "keyframe_2_seconds"
-     },
-     "link": null
-    },
-    {
-     "color_off": null,
-     "color_on": null,
-     "dir": null,
-     "label": null,
-     "localized_name": "notes",
-     "locked": null,
-     "name": "notes",
-     "nameLocked": null,
-     "removable": null,
-     "shape": 7,
-     "type": "STRING",
-     "widget": {
-      "name": "notes"
-     },
-     "link": null
-    },
-    {
-     "color_off": null,
-     "color_on": null,
-     "dir": null,
-     "label": null,
-     "localized_name": "window_frames",
-     "locked": null,
-     "name": "window_frames",
-     "nameLocked": null,
-     "removable": null,
-     "shape": 7,
-     "type": "INT",
-     "widget": {
-      "name": "window_frames"
      },
      "link": null
     },
@@ -1368,6 +1368,23 @@
       "name": "keyframe_4_seconds"
      },
      "link": null
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "notes",
+     "locked": null,
+     "name": "notes",
+     "nameLocked": null,
+     "removable": null,
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "notes"
+     },
+     "link": null
     }
    ],
    "outputs": [
@@ -1434,16 +1451,17 @@
     "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
     "minimax_h3_video_vae_fp16.safetensors",
     "minimax_h3_audio_vae_fp32.safetensors",
+    124,
+    5.17,
     60,
     2.5,
     110,
     4.58,
-    "A handheld phone selfie at a street market; the two friends lean in and out of the frame.",
-    124,
     20,
     0.83,
     100,
-    4.17
+    4.17,
+    "A handheld phone selfie at a street market; the two friends lean in and out of the frame."
    ],
    "widgets_values_named": {
     "seed": 126641851344863,
@@ -1452,16 +1470,17 @@
     "text_encoder": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
     "video_vae": "minimax_h3_video_vae_fp16.safetensors",
     "audio_vae": "minimax_h3_audio_vae_fp32.safetensors",
+    "window_frames": 124,
+    "window_seconds": 5.17,
     "keyframe_1_frame": 60,
     "keyframe_1_seconds": 2.5,
     "keyframe_2_frame": 110,
     "keyframe_2_seconds": 4.58,
-    "notes": "A handheld phone selfie at a street market; the two friends lean in and out of the frame.",
-    "window_frames": 124,
     "keyframe_3_frame": 20,
     "keyframe_3_seconds": 0.83,
     "keyframe_4_frame": 100,
-    "keyframe_4_seconds": 4.17
+    "keyframe_4_seconds": 4.17,
+    "notes": "A handheld phone selfie at a street market; the two friends lean in and out of the frame."
    }
   },
   {

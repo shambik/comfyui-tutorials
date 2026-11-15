@@ -80,9 +80,10 @@ Viggle outputs 1280×736 (0.94 MP). The source clips are 1664×928 (1.5 MP, Mini
 
 Viggle Remake takes up to 345 frames (14.4 s) per pass. On a 10 GB card about 124 frames (5.2 s) fit: 124 frames
 use 9.5 GB, 141 frames 9.9 GB, and 175 frames stream weights from RAM at ~7.6 min per step. So the node's
-`window_frames` defaults to 124. Viggle Long Swap splits longer clips into windows. Each window starts on the
+window length defaults to 124 frames (5.17 s). Viggle Long Swap splits longer clips into windows. Each window starts on the
 previous window's last 17 frames, and its last frame is pinned as the next window's keyframe, so the joins don't
-show. On a card with more VRAM, raise `window_frames` to get fewer joins (not tested here). Every frame number has
+show. On a card with more VRAM, raise **window_seconds** (or window_frames, they're linked; right under the model files)
+up to 14.38 s to get fewer joins (not tested here). Every frame number has
 a linked **seconds** field: type the time you see in the player and the frame number follows.
 
 Plan for about 7 minutes per 5 seconds of video. On 64 GB of RAM, keep one run to about 25 s.

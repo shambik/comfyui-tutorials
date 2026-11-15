@@ -3,7 +3,7 @@
 Swap people in clips longer than one Viggle Remake pass, from one node, with no scripts and no seams.
 
 Viggle Remake renders up to 345 frames (14.4 s at 24 fps) per pass; on a 10 GB card about 124 frames (5.2 s) fit,
-which is the node's default (`window_frames`). **Viggle Long Swap** splits a longer clip into windows of that
+which is the node's default. Set it with **window_frames** / **window_seconds** (linked, right under the model files). **Viggle Long Swap** splits a longer clip into windows of that
 length and chains them:
 
 * each window starts 17 frames before the previous one ends and takes those frames from the previous result;

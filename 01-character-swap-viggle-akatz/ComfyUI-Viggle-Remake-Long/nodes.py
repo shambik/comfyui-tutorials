@@ -378,6 +378,14 @@ class ViggleLongSwap:
             "video_vae": (vaes, {"default": _default(vaes, DEFAULTS["video_vae"])}),
             "audio_vae": (vaes, {"default": _default(vaes, DEFAULTS["audio_vae"])}),
         }, "optional": {
+            # field order on the node: models, then the window length, then the keyframes, then notes
+            "window_frames": ("INT", {"default": 124, "min": 90, "max": 345, "step": 17, "tooltip":
+                              "Frames per Viggle pass, at 24 fps: 124 = 5.2 s (default, what fits a 10 GB card, tested "
+                              "on an RTX 3080) ... 345 = 14.4 s (Viggle's maximum). A card with more VRAM can use "
+                              "longer windows and gets fewer joins (not tested here)."}),
+            "window_seconds": ("FLOAT", {"default": 5.17, "min": 3.75, "max": 14.38, "step": 0.71, "round": 0.01, "tooltip":
+                               "The window length in seconds, linked to window_frames: type seconds and the nearest "
+                               "length Viggle allows (17n+5 frames) is set. 5.17 s fits a 10 GB card; up to 14.38 s."}),
             "keyframe_1": ("IMAGE", {"tooltip": "Optional: a frame of the source, edited in an image editor so the new "
                                                 "people stand where the old ones stood (painted mode). First window only "
                                                 "(before ~4.5 s); later windows continue from the previous window."}),
@@ -390,13 +398,6 @@ class ViggleLongSwap:
             "keyframe_2_frame": ("INT", {"default": 110, "min": 0, "max": 100000}),
             "keyframe_2_seconds": ("FLOAT", {"default": 4.58, "min": -1.0, "max": 100000.0, "step": 0.01, "round": 0.01,
                          "tooltip": "The same moment in seconds (24 fps). Linked to the frame number: change either one and the other follows."}),
-            "notes": ("STRING", {"multiline": True, "default": "", "tooltip":
-                      "Optional extra sentence for the prompt, e.g. 'The people far down the street stay as they are.'"}),
-            # new widgets go LAST: saved workflows store widget values by position
-            "window_frames": ("INT", {"default": 124, "min": 90, "max": 345, "step": 17, "tooltip":
-                              "Frames per Viggle pass, at 24 fps: 124 = 5.2 s (default, what fits a 10 GB card, tested "
-                              "on an RTX 3080) ... 345 = 14.4 s (Viggle's maximum). A card with more VRAM can use "
-                              "longer windows and gets fewer joins (not tested here)."}),
             "keyframe_3": ("IMAGE", {"tooltip": "Optional third edited frame, also in the first window."}),
             "keyframe_3_frame": ("INT", {"default": 20, "min": 0, "max": 100000}),
             "keyframe_3_seconds": ("FLOAT", {"default": 0.83, "min": -1.0, "max": 100000.0, "step": 0.01, "round": 0.01,
@@ -405,6 +406,8 @@ class ViggleLongSwap:
             "keyframe_4_frame": ("INT", {"default": 100, "min": 0, "max": 100000}),
             "keyframe_4_seconds": ("FLOAT", {"default": 4.17, "min": -1.0, "max": 100000.0, "step": 0.01, "round": 0.01,
                          "tooltip": "The same moment in seconds (24 fps). Linked to the frame number: change either one and the other follows."}),
+            "notes": ("STRING", {"multiline": True, "default": "", "tooltip":
+                      "Optional extra sentence for the prompt, e.g. 'The people far down the street stay as they are.'"}),
         }, "hidden": {"dynprompt": "DYNPROMPT", "unique_id": "UNIQUE_ID"}}
 
     RETURN_TYPES = ("VIDEO", "IMAGE", "STRING")
