@@ -1,0 +1,193 @@
+{
+ "11": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+  }
+ },
+ "13": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+   "type": "minimax",
+   "device": "default"
+  }
+ },
+ "15": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 8942474086175928737
+  }
+ },
+ "16": {
+  "class_type": "BasicGuider",
+  "inputs": {
+   "model": [
+    "201",
+    0
+   ],
+   "conditioning": [
+    "104",
+    0
+   ]
+  }
+ },
+ "10": {
+  "class_type": "VAEDecodeTiled",
+  "inputs": {
+   "samples": [
+    "14",
+    0
+   ],
+   "vae": [
+    "11",
+    0
+   ],
+   "tile_size": 512,
+   "overlap": 64,
+   "temporal_size": 64,
+   "temporal_overlap": 16
+  }
+ },
+ "14": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "15",
+    0
+   ],
+   "guider": [
+    "16",
+    0
+   ],
+   "sampler": [
+    "130",
+    0
+   ],
+   "sigmas": [
+    "132",
+    0
+   ],
+   "latent_image": [
+    "104",
+    1
+   ]
+  }
+ },
+ "91": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "images": [
+    "10",
+    0
+   ],
+   "fps": 24.0,
+   "bit_depth": 8,
+   "audio": [
+    "23",
+    0
+   ]
+  }
+ },
+ "92": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "video": [
+    "91",
+    0
+   ],
+   "filename_prefix": "alien_delivery_shot",
+   "format": "mp4",
+   "codec": "auto"
+  }
+ },
+ "24": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+  }
+ },
+ "23": {
+  "class_type": "VAEDecodeAudio",
+  "inputs": {
+   "samples": [
+    "14",
+    0
+   ],
+   "vae": [
+    "24",
+    0
+   ]
+  }
+ },
+ "127": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+   "weight_dtype": "default"
+  }
+ },
+ "160": {
+  "class_type": "LoraLoaderModelOnly",
+  "inputs": {
+   "model": [
+    "127",
+    0
+   ],
+   "lora_name": "pika_h3_flex_fl2va_comfy_bf16.safetensors",
+   "strength_model": 1.0
+  }
+ },
+ "130": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "lcm"
+  }
+ },
+ "132": {
+  "class_type": "ManualSigmas",
+  "inputs": {
+   "sigmas": "1.0, 0.972973, 0.923077, 0.8, 0.571429, 0.333333, 0.0"
+  }
+ },
+ "104": {
+  "class_type": "MiniMaxH3ImageToVideo",
+  "inputs": {
+   "clip": [
+    "13",
+    0
+   ],
+   "vae": [
+    "11",
+    0
+   ],
+   "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] A six-second live-action medium-wide shot begins exactly from <Picture 1>, preserving Danny, the young man with light-brown skin, short curly black hair and a thin moustache, in the faded red zip jacket, dark red cap, dark t-shirt and dusty dark cargo pants, with the plain red insulated delivery bag holding out the large flat pizza box with both hands, the plain red cube-shaped delivery bag hanging by its short handles from his left forearm, and Lord Kethra, very tall, with silver-grey freckled skin, a crown-like bone crest, pale lilac eyes and heavy cream-and-gold robes in the open pearl doorway, with the bridge and the deep canyon behind Danny and warm lamplight inside the tower. The eye-level camera holds its position with slight small-amplitude handheld breathing. From 0.00 to 2.40 seconds, Danny, with a warm, slightly husky young male voice and a relaxed American accent (S1), says with a bright professional smile: <d>[English] Large pepperoni for... Lord Kethra?</d> His mouth articulates only this line. From 2.40 to 4.00 seconds, Lord Kethra looks down at the big box with curiosity and takes it from Danny in long silver fingers. From 4.00 to 6.00 seconds, the lord holds the box in one hand and lifts the lid, and its pale lilac eyes widen with quiet delight at the pizza inside. The box stays the same large size throughout. The red cube bag keeps the same size and stays on his left forearm the whole time. There is no steam, smoke or vapour anywhere near any face or nose. Anyone who is not speaking keeps their mouth closed and makes no vocal sounds. Natural real-time motion at normal speed, relaxed and believable, with natural blinking and breathing; faces, hands and bodies keep their shape and proportions. Preserve the clear late-afternoon daylight, crisp detail, real skin, prosthetic and stone textures throughout.\n\noverall_soundscape: Canyon wind behind them, the heavy rustle of robes, cardboard creaking.\n\nnon_diegetic_music: N/A",
+   "width": 1632,
+   "height": 928,
+   "length": 158,
+   "first_frame": [
+    "200",
+    0
+   ]
+  }
+ },
+ "200": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "alien_delivery_D1_opening.png"
+  },
+  "is_changed": [
+   "250441f3bb24518268b8dcbfa1fa2ef14ddd83b5cace9dbf3407aab83e34dcb9"
+  ]
+ },
+ "201": {
+  "class_type": "ModelAttentionBackend",
+  "inputs": {
+   "model": [
+    "160",
+    0
+   ],
+   "attention": "comfy kitchen attention"
+  }
+ }
+}

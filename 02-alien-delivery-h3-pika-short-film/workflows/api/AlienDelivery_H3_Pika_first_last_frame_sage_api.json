@@ -1,0 +1,207 @@
+{
+ "11": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+  }
+ },
+ "13": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+   "type": "minimax",
+   "device": "default"
+  }
+ },
+ "15": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 5968342479760759071
+  }
+ },
+ "16": {
+  "class_type": "BasicGuider",
+  "inputs": {
+   "model": [
+    "202",
+    0
+   ],
+   "conditioning": [
+    "104",
+    0
+   ]
+  }
+ },
+ "10": {
+  "class_type": "VAEDecodeTiled",
+  "inputs": {
+   "samples": [
+    "14",
+    0
+   ],
+   "vae": [
+    "11",
+    0
+   ],
+   "tile_size": 512,
+   "overlap": 64,
+   "temporal_size": 64,
+   "temporal_overlap": 16
+  }
+ },
+ "14": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "15",
+    0
+   ],
+   "guider": [
+    "16",
+    0
+   ],
+   "sampler": [
+    "130",
+    0
+   ],
+   "sigmas": [
+    "132",
+    0
+   ],
+   "latent_image": [
+    "104",
+    1
+   ]
+  }
+ },
+ "91": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "images": [
+    "10",
+    0
+   ],
+   "fps": 24.0,
+   "bit_depth": 8,
+   "audio": [
+    "23",
+    0
+   ]
+  }
+ },
+ "92": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "video": [
+    "91",
+    0
+   ],
+   "filename_prefix": "alien_delivery_shot",
+   "format": "mp4",
+   "codec": "auto"
+  }
+ },
+ "24": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+  }
+ },
+ "23": {
+  "class_type": "VAEDecodeAudio",
+  "inputs": {
+   "samples": [
+    "14",
+    0
+   ],
+   "vae": [
+    "24",
+    0
+   ]
+  }
+ },
+ "127": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+   "weight_dtype": "default"
+  }
+ },
+ "160": {
+  "class_type": "LoraLoaderModelOnly",
+  "inputs": {
+   "model": [
+    "127",
+    0
+   ],
+   "lora_name": "pika_h3_flex_fl2va_comfy_bf16.safetensors",
+   "strength_model": 1.0
+  }
+ },
+ "130": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "lcm"
+  }
+ },
+ "132": {
+  "class_type": "ManualSigmas",
+  "inputs": {
+   "sigmas": "1.0, 0.972973, 0.923077, 0.8, 0.571429, 0.333333, 0.0"
+  }
+ },
+ "104": {
+  "class_type": "MiniMaxH3ImageToVideo",
+  "inputs": {
+   "clip": [
+    "13",
+    0
+   ],
+   "vae": [
+    "11",
+    0
+   ],
+   "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced. At 6.00 seconds into the target video, <Picture 2> (from [Shot 1]) is fully referenced. Generate one continuous, physically plausible live-action shot between them, with the camera locked in the same position the whole time.\n\nintegrated_multimodal_description: [Shot 1] A six-second live-action medium-wide shot begins exactly from <Picture 1> and ends exactly on <Picture 2>, preserving Danny, the young man with light-brown skin, short curly black hair and a thin moustache, in the faded red zip jacket, dark red cap, dark t-shirt and dusty dark cargo pants, with the plain red insulated delivery bag in front of the closed pearl door holding the glowing golden orb with the plain red cube-shaped delivery bag hanging by its short handles from his left forearm, the stone bridge railing with its gold-domed posts and glassy crystal panels, and, at the far left, a slice of pepperoni pizza that seems to float above the railing, held up in the long fingers of the slim humanoid chameleon alien with fine blue-green scales, huge round golden eyes, a curled tail and braided cords around its neck, which clings flat to the crystal panel with crystal-patterned scales so that it blends in. The eye-level camera holds its position with slight small-amplitude handheld breathing. The chameleon alien stays flat on the crystal panel in exactly the same place and pose for the whole shot, its whole body always visible on the panel, its arm raised over the stone top holding the slice; it never climbs and never moves its body. The railing, its posts and the gold domes do not change. From 0.00 to 1.40 seconds, Danny looks up from the orb, notices the floating slice and does a double take. From 1.40 to 3.00 seconds, the crystal pattern on the chameleon alien's scales fades and its own solid, opaque muted blue-green colour spreads over its whole body from head to tail, and its golden eye opens wide. From 3.00 to 4.60 seconds, it waggles the slice and, with a quick, light, chirpy voice (S4), says cheekily: <d>[English] Guide's fee!</d> Danny's mouth stays closed. From 4.60 to 6.00 seconds, Danny glances back at the closed door, then laughs, shaking his head, and looks back down at the glowing orb on his palm with a big grin. The chameleon alien never glows and no light comes from it. It holds the whole slice in the same hand for the whole shot and never eats it or puts it down. The red cube bag keeps the same size and stays on his left forearm the whole time. Natural real-time motion at normal speed, relaxed and believable, with natural blinking and breathing; faces, hands and bodies keep their shape and proportions. Preserve the clear late-afternoon daylight, crisp detail, real skin, prosthetic and stone textures throughout.\n\noverall_soundscape: Canyon wind, a soft scaly rustle, the chameleon alien's chirpy line, Danny's short laugh.\n\nnon_diegetic_music: N/A",
+   "width": 1632,
+   "height": 928,
+   "length": 158,
+   "first_frame": [
+    "200",
+    0
+   ],
+   "last_frame": [
+    "201",
+    0
+   ]
+  }
+ },
+ "200": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "alien_delivery_E2_first.png"
+  },
+  "is_changed": [
+   "a11401e7607241858e50525319574870689b92aba703380b053543faf669fa83"
+  ]
+ },
+ "201": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "alien_delivery_E2_last.png"
+  },
+  "is_changed": [
+   "f23fd53fcba80e8f07ae3de04c57382c0d64883658b5d9c8642e30ca6753f1d4"
+  ]
+ },
+ "202": {
+  "class_type": "PathchSageAttentionKJ",
+  "inputs": {
+   "model": [
+    "160",
+    0
+   ],
+   "sage_attention": "auto",
+   "allow_compile": false
+  }
+ }
+}

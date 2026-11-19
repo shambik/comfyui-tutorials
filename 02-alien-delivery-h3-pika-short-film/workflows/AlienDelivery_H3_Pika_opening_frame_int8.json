@@ -1,0 +1,1097 @@
+{
+  "version": 0.4,
+  "last_node_id": 202,
+  "last_link_id": 19,
+  "nodes": [
+    {
+      "id": 11,
+      "type": "VAELoader",
+      "pos": [
+        720,
+        0
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "vae_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            2,
+            14
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "minimax_h3_video_vae_int8_convrot.safetensors"
+      ]
+    },
+    {
+      "id": 13,
+      "type": "CLIPLoader",
+      "pos": [
+        720,
+        216
+      ],
+      "size": [
+        340,
+        208
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "clip_name"
+          }
+        },
+        {
+          "name": "type",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "type"
+          }
+        },
+        {
+          "name": "device",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "device"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "minimax",
+        "default"
+      ]
+    },
+    {
+      "id": 15,
+      "type": "RandomNoise",
+      "pos": [
+        720,
+        484
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "noise_seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "noise_seed"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "NOISE",
+          "type": "NOISE",
+          "links": [
+            8
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RandomNoise"
+      },
+      "widgets_values": [
+        8942474086175928737,
+        "fixed"
+      ]
+    },
+    {
+      "id": 24,
+      "type": "VAELoader",
+      "pos": [
+        720,
+        726
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "vae_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            16
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "minimax_h3_audio_vae_fp32.safetensors"
+      ]
+    },
+    {
+      "id": 127,
+      "type": "UNETLoader",
+      "pos": [
+        720,
+        942
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "unet_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "unet_name"
+          }
+        },
+        {
+          "name": "weight_dtype",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "weight_dtype"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            4
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 130,
+      "type": "KSamplerSelect",
+      "pos": [
+        720,
+        1184
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "sampler_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "sampler_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "links": [
+            10
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSamplerSelect"
+      },
+      "widgets_values": [
+        "lcm"
+      ]
+    },
+    {
+      "id": 132,
+      "type": "ManualSigmas",
+      "pos": [
+        720,
+        1400
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "sigmas",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "sigmas"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            11
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ManualSigmas"
+      },
+      "widgets_values": [
+        "1.0, 0.972973, 0.923077, 0.8, 0.571429, 0.333333, 0.0"
+      ]
+    },
+    {
+      "id": 200,
+      "type": "LoadImage",
+      "pos": [
+        720,
+        1616
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "image"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "alien_delivery_D1_opening.png",
+        "image"
+      ]
+    },
+    {
+      "id": 104,
+      "type": "MiniMaxH3ImageToVideo",
+      "pos": [
+        1120,
+        0
+      ],
+      "size": [
+        520,
+        560
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 2
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "height"
+          }
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "length"
+          }
+        },
+        {
+          "name": "first_frame",
+          "type": "IMAGE",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            12
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3ImageToVideo"
+      },
+      "widgets_values": [
+        "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] A six-second live-action medium-wide shot begins exactly from <Picture 1>, preserving Danny, the young man with light-brown skin, short curly black hair and a thin moustache, in the faded red zip jacket, dark red cap, dark t-shirt and dusty dark cargo pants, with the plain red insulated delivery bag holding out the large flat pizza box with both hands, the plain red cube-shaped delivery bag hanging by its short handles from his left forearm, and Lord Kethra, very tall, with silver-grey freckled skin, a crown-like bone crest, pale lilac eyes and heavy cream-and-gold robes in the open pearl doorway, with the bridge and the deep canyon behind Danny and warm lamplight inside the tower. The eye-level camera holds its position with slight small-amplitude handheld breathing. From 0.00 to 2.40 seconds, Danny, with a warm, slightly husky young male voice and a relaxed American accent (S1), says with a bright professional smile: <d>[English] Large pepperoni for... Lord Kethra?</d> His mouth articulates only this line. From 2.40 to 4.00 seconds, Lord Kethra looks down at the big box with curiosity and takes it from Danny in long silver fingers. From 4.00 to 6.00 seconds, the lord holds the box in one hand and lifts the lid, and its pale lilac eyes widen with quiet delight at the pizza inside. The box stays the same large size throughout. The red cube bag keeps the same size and stays on his left forearm the whole time. There is no steam, smoke or vapour anywhere near any face or nose. Anyone who is not speaking keeps their mouth closed and makes no vocal sounds. Natural real-time motion at normal speed, relaxed and believable, with natural blinking and breathing; faces, hands and bodies keep their shape and proportions. Preserve the clear late-afternoon daylight, crisp detail, real skin, prosthetic and stone textures throughout.\n\noverall_soundscape: Canyon wind behind them, the heavy rustle of robes, cardboard creaking.\n\nnon_diegetic_music: N/A",
+        1632,
+        928,
+        158
+      ]
+    },
+    {
+      "id": 160,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        1120,
+        620
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 4
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            5
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "pika_h3_flex_fl2va_comfy_bf16.safetensors",
+        1.0
+      ]
+    },
+    {
+      "id": 201,
+      "type": "ModelAttentionBackend",
+      "pos": [
+        1520,
+        0
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 5
+        },
+        {
+          "name": "attention",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "attention"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            6
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ModelAttentionBackend"
+      },
+      "widgets_values": [
+        "comfy kitchen attention"
+      ]
+    },
+    {
+      "id": 16,
+      "type": "BasicGuider",
+      "pos": [
+        1920,
+        0
+      ],
+      "size": [
+        340,
+        130
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 6
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "GUIDER",
+          "type": "GUIDER",
+          "links": [
+            9
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicGuider"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 14,
+      "type": "SamplerCustomAdvanced",
+      "pos": [
+        2320,
+        0
+      ],
+      "size": [
+        340,
+        130
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "noise",
+          "type": "NOISE",
+          "link": 8
+        },
+        {
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 9
+        },
+        {
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 10
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 11
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            13,
+            15
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SamplerCustomAdvanced"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 10,
+      "type": "VAEDecodeTiled",
+      "pos": [
+        2720,
+        0
+      ],
+      "size": [
+        340,
+        234
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 13
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 14
+        },
+        {
+          "name": "tile_size",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "tile_size"
+          }
+        },
+        {
+          "name": "overlap",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "overlap"
+          }
+        },
+        {
+          "name": "temporal_size",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "temporal_size"
+          }
+        },
+        {
+          "name": "temporal_overlap",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "temporal_overlap"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            17
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecodeTiled"
+      },
+      "widgets_values": [
+        512,
+        64,
+        64,
+        16
+      ]
+    },
+    {
+      "id": 23,
+      "type": "VAEDecodeAudio",
+      "pos": [
+        2720,
+        294
+      ],
+      "size": [
+        340,
+        130
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 15
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            18
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecodeAudio"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 91,
+      "type": "CreateVideo",
+      "pos": [
+        3120,
+        0
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 17
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "fps"
+          }
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 18
+        },
+        {
+          "name": "bit_depth",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "bit_depth"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            19
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [
+        24.0,
+        8
+      ]
+    },
+    {
+      "id": 92,
+      "type": "SaveVideo",
+      "pos": [
+        3520,
+        0
+      ],
+      "size": [
+        340,
+        208
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 19
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        },
+        {
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "format"
+          }
+        },
+        {
+          "name": "codec",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "codec"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "alien_delivery_shot",
+        "mp4",
+        "auto"
+      ]
+    },
+    {
+      "id": 202,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        640,
+        1250
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Read me: models and links",
+      "properties": {},
+      "widgets_values": [
+        "# Alien Delivery - H3 + Pika, opening frame (int8 attention)\nThe workflow behind most shots of *Alien Delivery*: MiniMax H3 FL2VA (pruned int8) + the **Pika H3 Flex** LoRA, 6 steps, with native H3 sound and dialogue. Real settings and prompt of shot D1 (\"Large pepperoni for... Lord Kethra?\").\n\nThe film's own opening frame for this shot is in `inputs/alien_delivery_D1_opening.png`: copy it into `ComfyUI/input` and queue to get the same shot. For your own shot, load your frame (1632x928, 16:9 works best) and write your prompt in the MiniMax H3 Image To Video node.\n\n## Models\n- **H3 FL2VA (first/last frame + audio) base model, pruned, int8** (20.97 GB)  \n  file `minimax_h3_fl2va_pruned_int8_convrot.safetensors` -> put in `ComfyUI/models/diffusion_models/`  \n  https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors\n- **Pika H3 Flex LoRA for FL2VA (6-step sampling)** (1.96 GB)  \n  file `pika_h3_flex_fl2va_comfy_bf16.safetensors` -> put in `ComfyUI/models/loras/`  \n  https://huggingface.co/Pika-Labs/Pika-H3-Flex/resolve/main/comfy/loras/pika_h3_flex_fl2va_comfy_bf16.safetensors\n- **Qwen3-VL 32B text encoder for H3, NVFP4 AWQ** (15.69 GB)  \n  file `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` -> put in `ComfyUI/models/text_encoders/`  \n  https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors\n- **H3 video VAE, int8 (Kijai's build, the one used here)** (3.17 GB)  \n  file `minimax_h3_video_vae_int8_convrot.safetensors` -> put in `ComfyUI/models/vae/`  \n  https://huggingface.co/Kijai/MiniMax-H3-experimental/resolve/main/minimax_h3_video_vae_int8_convrot.safetensors\n- **H3 audio VAE** (0.61 GB)  \n  file `minimax_h3_audio_vae_fp32.safetensors` -> put in `ComfyUI/models/vae/`  \n  https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors\n\n## Custom nodes\nNone - every node is built into ComfyUI 0.44. \"comfy kitchen attention\" (int8 attention) in Model Attention Backend needs the `comfy_kitchen` package that ships with recent ComfyUI.\n\n## Settings that matter\n- 1632x928, length 158 = 6.58 s at 24 fps.\n- Sampler `lcm`, Pika's 6-step sigmas `1.0, 0.972973, 0.923077, 0.8, 0.571429, 0.333333, 0.0`, Basic Guider (no CFG).\n- Tiled VAE decode 512 / 64 / 64 / 16 keeps a 10 GB card in VRAM. About 8 minutes per shot on an RTX 3080 (shot D1: 495 s).\n- Prompt format: the official MiniMax H3 layout (alignment line, `integrated_multimodal_description: [Shot 1] ...`, `overall_soundscape:`, `non_diegetic_music: N/A`), beats timed to two decimals, dialogue as `(S1) says: <d>[English] ...</d>`.\n\n## How the film was made\n1. **Frames** - every shot opens on a still drawn with Codex image generation (1672x941, cropped to 1632x928). One master view per scene; close shots are crops of it, re-detailed.\n2. **Shots** - this H3 + Pika workflow, 6 s each (158 frames, 24 fps), opening frame, or first + last frame where both frames share one locked camera.\n3. **Upscale** - NVIDIA RTX Video Super Resolution to 2560x1440 (NVIDIA Visual Enhancer `VE_CLI.exe`, outside ComfyUI). It must run on the 24 fps original, before smoothing.\n4. **Smoothing** - the RIFE x2 workflow, per shot (never across a cut, RIFE makes a ghost frame at hard cuts) -> 48 fps.\n5. **Music** - Google Lyria 3.5 (instrumental, \"retro sci-fi comedy space funk, 112 BPM\"), mixed ~14 LU under the dialogue with sidechain ducking in FFmpeg.\n\nMachine: RTX 3080 10 GB, 64 GB RAM, ComfyUI 0.44.0, PyTorch 2.11 + CUDA 13.0."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      1,
+      13,
+      0,
+      104,
+      0,
+      "CLIP"
+    ],
+    [
+      2,
+      11,
+      0,
+      104,
+      1,
+      "VAE"
+    ],
+    [
+      3,
+      200,
+      0,
+      104,
+      6,
+      "IMAGE"
+    ],
+    [
+      4,
+      127,
+      0,
+      160,
+      0,
+      "MODEL"
+    ],
+    [
+      5,
+      160,
+      0,
+      201,
+      0,
+      "MODEL"
+    ],
+    [
+      6,
+      201,
+      0,
+      16,
+      0,
+      "MODEL"
+    ],
+    [
+      7,
+      104,
+      0,
+      16,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      8,
+      15,
+      0,
+      14,
+      0,
+      "NOISE"
+    ],
+    [
+      9,
+      16,
+      0,
+      14,
+      1,
+      "GUIDER"
+    ],
+    [
+      10,
+      130,
+      0,
+      14,
+      2,
+      "SAMPLER"
+    ],
+    [
+      11,
+      132,
+      0,
+      14,
+      3,
+      "SIGMAS"
+    ],
+    [
+      12,
+      104,
+      1,
+      14,
+      4,
+      "LATENT"
+    ],
+    [
+      13,
+      14,
+      0,
+      10,
+      0,
+      "LATENT"
+    ],
+    [
+      14,
+      11,
+      0,
+      10,
+      1,
+      "VAE"
+    ],
+    [
+      15,
+      14,
+      0,
+      23,
+      0,
+      "LATENT"
+    ],
+    [
+      16,
+      24,
+      0,
+      23,
+      1,
+      "VAE"
+    ],
+    [
+      17,
+      10,
+      0,
+      91,
+      0,
+      "IMAGE"
+    ],
+    [
+      18,
+      23,
+      0,
+      91,
+      2,
+      "AUDIO"
+    ],
+    [
+      19,
+      91,
+      0,
+      92,
+      0,
+      "VIDEO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6,
+      "offset": [
+        40,
+        40
+      ]
+    }
+  }
+}

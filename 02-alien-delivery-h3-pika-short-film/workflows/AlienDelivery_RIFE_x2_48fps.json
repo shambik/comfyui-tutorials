@@ -1,0 +1,401 @@
+{
+  "version": 0.4,
+  "last_node_id": 32,
+  "last_link_id": 6,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadVideo",
+      "pos": [
+        720,
+        0
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "file",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "file"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadVideo"
+      },
+      "widgets_values": [
+        "alien_delivery_D1_2560_24fps.mp4",
+        "image"
+      ]
+    },
+    {
+      "id": 10,
+      "type": "FrameInterpolationModelLoader",
+      "pos": [
+        720,
+        242
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "model_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "INTERP_MODEL",
+          "type": "INTERP_MODEL",
+          "links": [
+            2
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FrameInterpolationModelLoader"
+      },
+      "widgets_values": [
+        "rife_v4.26.safetensors"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "GetVideoComponents",
+      "pos": [
+        1120,
+        0
+      ],
+      "size": [
+        340,
+        130
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            5
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [],
+          "slot_index": 2
+        },
+        {
+          "name": "COMBO",
+          "type": "COMBO",
+          "links": [],
+          "slot_index": 3
+        },
+        {
+          "name": "COMBO",
+          "type": "COMBO",
+          "links": [],
+          "slot_index": 4
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GetVideoComponents"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 11,
+      "type": "FrameInterpolate",
+      "pos": [
+        1520,
+        0
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "interp_model",
+          "type": "INTERP_MODEL",
+          "link": 2
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 3
+        },
+        {
+          "name": "multiplier",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "multiplier"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            4
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FrameInterpolate"
+      },
+      "widgets_values": [
+        2
+      ]
+    },
+    {
+      "id": 30,
+      "type": "CreateVideo",
+      "pos": [
+        1920,
+        0
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 4
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "fps"
+          }
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            6
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [
+        48.0
+      ]
+    },
+    {
+      "id": 31,
+      "type": "SaveVideo",
+      "pos": [
+        2320,
+        0
+      ],
+      "size": [
+        340,
+        208
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 6
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        },
+        {
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "format"
+          }
+        },
+        {
+          "name": "codec",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "codec"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "alien_delivery_48fps",
+        "mp4",
+        "auto"
+      ]
+    },
+    {
+      "id": 32,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        640,
+        1250
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Read me: models and links",
+      "properties": {},
+      "widgets_values": [
+        "# Alien Delivery - RIFE x2 smoothing (24 -> 48 fps)\nThe smoothing step: RIFE 4.26 doubles the frames of one upscaled shot (2560x1440, 24 fps -> 48 fps) and keeps its sound. Run it **per shot**, before joining shots: across a hard cut RIFE draws a ghost frame.\n\nThe film's upscaled shot D1 is in `inputs/alien_delivery_D1_2560_24fps.mp4`: copy it into `ComfyUI/input` and queue. For your own clip, pick it in Load Video; the output fps must be twice the source (48 for 24 fps clips).\n\n## Models\n- **RIFE 4.26 frame interpolation** (0.02 GB)  \n  file `rife_v4.26.safetensors` -> put in `ComfyUI/models/frame_interpolation/`  \n  https://huggingface.co/Comfy-Org/Frame-Interpolation/resolve/main/frame_interpolation/rife_v4.26.safetensors\n\n## Custom nodes\nNone - Frame Interpolation and the video nodes are built into ComfyUI 0.44.\n\n## Measured on the RTX 3080\nAbout 55-60 s per 6.6 s shot at 2560x1440 (the app ran it in two chunks of ~78 frames to keep RAM low; one pass of a whole shot needs about 30 GB of RAM at 2560).\n\n## How the film was made\n1. **Frames** - every shot opens on a still drawn with Codex image generation (1672x941, cropped to 1632x928). One master view per scene; close shots are crops of it, re-detailed.\n2. **Shots** - this H3 + Pika workflow, 6 s each (158 frames, 24 fps), opening frame, or first + last frame where both frames share one locked camera.\n3. **Upscale** - NVIDIA RTX Video Super Resolution to 2560x1440 (NVIDIA Visual Enhancer `VE_CLI.exe`, outside ComfyUI). It must run on the 24 fps original, before smoothing.\n4. **Smoothing** - the RIFE x2 workflow, per shot (never across a cut, RIFE makes a ghost frame at hard cuts) -> 48 fps.\n5. **Music** - Google Lyria 3.5 (instrumental, \"retro sci-fi comedy space funk, 112 BPM\"), mixed ~14 LU under the dialogue with sidechain ducking in FFmpeg.\n\nMachine: RTX 3080 10 GB, 64 GB RAM, ComfyUI 0.44.0, PyTorch 2.11 + CUDA 13.0."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "VIDEO"
+    ],
+    [
+      2,
+      10,
+      0,
+      11,
+      0,
+      "INTERP_MODEL"
+    ],
+    [
+      3,
+      2,
+      0,
+      11,
+      1,
+      "IMAGE"
+    ],
+    [
+      4,
+      11,
+      0,
+      30,
+      0,
+      "IMAGE"
+    ],
+    [
+      5,
+      2,
+      1,
+      30,
+      2,
+      "AUDIO"
+    ],
+    [
+      6,
+      30,
+      0,
+      31,
+      0,
+      "VIDEO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6,
+      "offset": [
+        40,
+        40
+      ]
+    }
+  }
+}
